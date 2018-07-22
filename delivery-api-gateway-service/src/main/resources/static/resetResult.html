@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <style type="text/css">
+        body{
+            margin:0 auto;
+            background-image: url(bg.jpg);
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-color:black;
+        }
+        .align-center{
+            margin:0 auto; /* 居中 这个是必须的，，其它的属性非必须 */
+            width:360px; /* 给个宽度 顶到浏览器的两边就看不出居中效果了 */
+            text-align:center; /* 文字等内容居中 */
+            border:1px solid #ccc;
+            height:430px;
+            margin-top:60px;
+            background:white;
+        }
+        .title-div{
+            font-size:40px;
+            margin:0 auto;
+            text-align:center;
+            font-family: Verdana;
+            color:#FF3B30;
+            line-height:140px;
+        }
+        .msg-div{
+            font-size:20px;
+            margin:0 auto;
+            font-family:黑体;
+            text-align:center;
+            color:#484848;
+            line-height:40px;
+        }
+    </style>
+    <script src="jquery-3.3.1.js"></script>
+    <script language="JavaScript" type="text/javascript">
+        $(document).ready(function() {
+
+            //获取Location对象的search属性值
+            var searchStr = location.search;
+            //由于searchStr属性值包括“?”，所以除去该字符
+            searchStr = searchStr.substr(1);
+            //将searchStr字符串分割成数组，数组中的每一个元素为一个参数和参数值
+            var searchs = searchStr.split("&");
+
+            //获得第一个参数和值
+            var tyArray = searchs[0].split("=");
+            var typeCode=tyArray[1];
+            var messageArray = searchs[1].split("=");
+            var message=messageArray[1];
+            var retMsg =  decodeURI(message);
+            $("#msgDiv").html(retMsg);
+        });
+    </script>
+</head>
+<body>
+<div class="align-center">
+    <div class="title-div">2Yum</div>
+    <div id="msgDiv" class="msg-div">
+    </div>
+</div>
+</body>
+</html>

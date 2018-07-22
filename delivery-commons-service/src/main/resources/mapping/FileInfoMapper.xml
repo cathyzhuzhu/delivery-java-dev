@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twoyum.commons.mapper.FileInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.twoyum.commons.domain.FileInfoOutDto" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="service_id" property="serviceId" jdbcType="VARCHAR" />
+    <result column="key_value" property="keyValue" jdbcType="VARCHAR" />
+    <result column="org_file_name" property="orgFileName" jdbcType="VARCHAR" />
+    <result column="cur_file_name" property="curFileName" jdbcType="VARCHAR" />
+    <result column="suffix_name" property="suffixName" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <insert id="insertFileInfo" parameterType="com.twoyum.commons.domain.FileInfoInDto" >
+  INSERT INTO t_file_info(service_id, key_value, org_file_name,cur_file_name, create_time, suffix_name)
+  VALUES (#{serviceId}, #{keyValue}, #{orgFileName},#{curFileName},current_timestamp(), #{suffixName});
+  </insert>
+  <select id="getFileInfo" resultMap="BaseResultMap" parameterType="com.twoyum.commons.domain.FileInfoInDto">
+       select
+               service_id,
+               key_value,
+               org_file_name,
+               cur_file_name,
+               suffix_name,
+               create_time
+         from t_file_info
+       where key_value=#{keyValue}
+  </select>
+  <select id="getFileInfoList" resultMap="BaseResultMap" parameterType="com.twoyum.commons.domain.FileInfoInDto">
+      select
+              service_id,
+              key_value,
+              org_file_name,
+              cur_file_name,
+              suffix_name,
+              create_time
+         from t_file_info
+       where key_value in
+      <foreach item="item" index="index" collection="keys"
+               open="(" separator="," close=")">
+              #{item}
+      </foreach>
+  </select>
+</mapper>

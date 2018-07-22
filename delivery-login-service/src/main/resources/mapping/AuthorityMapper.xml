@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twoyum.login.mapper.AuthorityMapper" >
+  <resultMap id="users" type="com.twoyum.login.domain.SysUserOutDto" >
+    <result column="user_name" property="userName"  />
+    <result column="email" property="email"  />
+    <result column="password" property="password" />
+    <result column="status" property="status" />
+  </resultMap>
+  <resultMap id="roles" type="com.twoyum.login.domain.SysRoleOutDto" >
+    <result column="role_name" property="roleName"  />
+    <result column="role_id" property="roleId" />
+    <result column="role_code" property="roleCode" />
+    <result column="sys_user_id" property="sysUserId" />
+  </resultMap>
+  <resultMap id="resources" type="com.twoyum.login.domain.ResourceOutDto" >
+    <result column="sys_resource_id" property="sysResourceId"  />
+    <result column="resource_name" property="resourceName" />
+    <result column="parent_code" property="parentCode" />
+    <result column="path" property="path" />
+    <result column="sort_no" property="sortNo" />
+  </resultMap>
+  <select id="findUserInfoByEmail" resultMap="users" parameterType="string" >
+    select user_name,
+            email,
+            password,
+            status
+    from t_sys_user
+    where email = #{email}
+    and status=1
+  </select>
+  <select id="findRoleInfoByEmail" resultMap="roles" parameterType="string" >
+        select b.role_id,
+                b.sys_user_id,
+                c.role_code,
+                c.role_name
+        from t_sys_user a
+        left join t_sys_user_roles b
+        on a.id = b.sys_user_id
+        left join t_sys_role c
+        on  b.role_id = c.id
+        where a.email = #{email}
+        and a.status=1
+  </select>
+    <select id="findResourceByAccount" resultMap="resources" parameterType="string">
+         select d.sys_resource_id,
+                 d.sort_no,
+                 e.parent_code,
+                 e.path,
+                 e.resource_name
+    from(select b.role_id,
+                 c.sys_resource_id,
+                 c.sort_no
+    from t_sys_user a
+    left join t_sys_user_roles b
+    on a.id = b.sys_user_id
+    left join t_sys_role_resource c
+    on b.role_id = c.sys_role_id
+    where account=#{account})d,t_sys_resource e
+    where d.sys_resource_id = e.id
+    order by d.sort_no
+    </select>
+</mapper>

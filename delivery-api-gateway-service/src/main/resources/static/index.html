@@ -1,0 +1,269 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <style type="text/css">
+        body{
+            margin:0 auto;
+            background-image: url(bg.jpg);
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-color:black;
+        }
+        .align-center{
+            margin:0 auto; /* 居中 这个是必须的，，其它的属性非必须 */
+            width:360px; /* 给个宽度 顶到浏览器的两边就看不出居中效果了 */
+            text-align:center; /* 文字等内容居中 */
+            border:1px solid #ccc;
+            height:430px;
+            margin-top:60px;
+            background:white;
+        }
+        .title-div{
+            font-family: Verdana;
+            font-size:40px;
+            margin:0 auto;
+            text-align:center;
+            color:#FF3B30;
+            line-height:140px;
+        }
+        .input-text{
+            width:300px;
+            height:50px;
+            font-size:18px;
+            line-height:30px;
+            border-radius:4px;
+            font-family:黑体;
+            font-weight:normal;
+            border:1px solid #ccc;
+            margin-bottom:20px;
+            text-indent: 10px;
+            text-shadow: none;
+        }
+        .btn-div{
+            background-color:#FF3B30;
+            opacity:0.5;
+            font-size:20px;
+            font-weight:bold;
+            font-family:黑体;
+            width:302px;
+            height:60px;
+            margin:0 auto;
+            text-align:center;
+            line-height:60px;
+            border-radius:5px;
+            color:white;
+        }
+        .msg-div{
+            margin:0 auto;
+            text-align:center;
+            background-color:#484848;
+            font-family:黑体;
+            width:260px;
+            height:70px;
+            color:white;
+            line-height:70px;
+            border-radius:5px;
+            display: none;
+         }
+        
+         input::-webkit-input-placeholder {
+             /* placeholder颜色  */
+             color: #ccc;
+         }
+    </style>
+    <script src="jquery-3.3.1.js"></script>
+    <script language="JavaScript" type="text/javascript">
+        $(document).ready(function() {
+            var path = "http://localhost:8201";
+            //获取Location对象的search属性值
+             var searchStr = location.search;
+            //由于searchStr属性值包括“?”，所以除去该字符
+            searchStr = searchStr.substr(1);
+            //将searchStr字符串分割成数组，数组中的每一个元素为一个参数和参数值
+            var searchs = searchStr.split("&");
+
+            //获得第一个参数和值
+            var emailArray = searchs[0].split("=");
+            var email=emailArray[1];
+            var tcArray = searchs[1].split("=");
+            var typeCode=tcArray[1];
+
+            $('#pass').attr('placeholder',transLan(typeCode,1));
+            $('#confirmPass').attr('placeholder',transLan(typeCode,2));
+            $("#saveBtn").html(transLan(typeCode,3));
+
+            $("#pass").focus(function(){
+                $("#pass").css("background-color","#FFFFCC");
+            });
+
+            $("#confirmPass").focus(function(){
+                $("#confirmPass").css("background-color","#FFFFCC");
+            });
+
+            $("#pass").blur(function(){
+                $("#saveBtn").css("background-color","#FF3B30");
+                var pass =$("#pass").val();
+                if(pass==""||pass.length<8||pass.length>20){
+                    $("#saveBtn").css("opacity",0.5);
+                }else{
+                    $("#saveBtn").css("opacity",1);
+                }
+            });
+
+            $("#pass").keyup(function(){
+                $("#saveBtn").css("background-color","#FF3B30");
+                var pass =$("#pass").val();
+                if(pass==""||pass.length<8||pass.length>20){
+                    $("#saveBtn").css("opacity",0.5);
+                }else{
+                    $("#saveBtn").css("opacity",1);
+                }
+            });
+
+            $("#confirmPass").blur(function(){
+                $("#saveBtn").css("background-color","#FF3B30");
+
+                var confirmPass = $("#confirmPass").val();
+                if(confirmPass==""||confirmPass.length<8||confirmPass.length>20){
+                    $("#saveBtn").css("opacity",0.5);
+                }else{
+                    $("#saveBtn").css("opacity",1);
+                }
+            });
+
+            $("#confirmPass").keyup(function(){
+                $("#saveBtn").css("background-color","#FF3B30");
+
+                var confirmPass = $("#confirmPass").val();
+                if(confirmPass==""||confirmPass.length<8||confirmPass.length>20){
+                    $("#saveBtn").css("opacity",0.5);
+                }else{
+                    $("#saveBtn").css("opacity",1);
+                }
+            })
+
+                $("#saveBtn").click(function () {
+                    var pass = $("#pass").val();
+                    var confirmPass = $("#confirmPass").val();
+
+                    if(pass==""||confirmPass==""){
+                        return false;
+                    }
+                    else if(confirmPass==""||confirmPass.length<8||confirmPass.length>20){
+                        return false;
+                    }
+                    else if(pass==""||pass.length<8||pass.length>20){
+                        return false;
+                    }else{
+
+                   if(pass!=confirmPass){
+                       $("#msgDiv").html(transLan(typeCode,4));//弹出层
+                       $("#msgDiv").show();
+                       $("#msgDiv").fadeOut(3000);
+                       return false;
+                   }
+                       $("#msgDiv").hide();
+                        $.ajax({
+                           url: path+"/login-service/user/updatePassword",
+                           method:"post",
+                           data: {
+                               typeCode: typeCode,
+                               email:email,
+                               password:pass,
+                               confirmPassword:confirmPass
+                           },
+                           success: function( result ) {
+                               $("#pass").attr("readonly",true);
+                               $("#confirmPass").attr("readonly",true);
+
+                               var msg= result.message;
+                               window.location.href= path+"/resetResult.html?typeCode="+typeCode+"&message="+msg;
+                           }
+                       });
+                    }
+                });
+            function transLan(type, code) {
+                var msg = "";
+                if (type == "zh-cn") {
+                    if (code == 1) {
+                        msg = "新密码/8-20字符";
+                    } else if (code == 2) {
+                        msg = "确认新密码";
+                    } else if (code == 3) {
+                        msg = "保存";
+                    } else if (code == 4) {
+                        msg = "密码不匹配";
+                    }else if(code ==5){
+                        msg = "提交成功";
+                    }
+                } else if (type == "zh-hk") {
+                    if (code == 1) {
+                        msg = "新密碼/8-20字元";
+                    } else if (code == 2) {
+                        msg = "確認新密碼";
+                    } else if (code == 3) {
+                        msg = "保存";
+                    } else if (code == 4) {
+                        msg = "密碼不匹配";
+                    } else if(code == 5){
+                        msg = "提交成功";
+                    }
+
+                } else if (type == "en") {
+                    if (code == 1) {
+                        msg = "New Password/8-20 characters";
+                    } else if (code == 2) {
+                        msg = "Confirm New Password";
+                    } else if (code == 3) {
+                        msg = "Save";
+                    } else if (code == 4) {
+                        msg = "Passwords do not match";
+                    } else if(code == 5){
+                        msg = "Submitted Successfully";
+                    }
+                } else if (type == "esp") {
+                    if (code == 1) {
+                        msg = "Nueva contraseña/8-20 personajes";
+                    } else if (code == 2) {
+                        msg = "Confirmar nueva contraseña";
+                    } else if (code == 3) {
+                        msg = "Guardar";
+                    } else if (code == 4) {
+                        msg = "Las contraseñas no coinciden";
+                    } else if(code == 5){
+                        msg = "Enviado con éxito";
+                    }
+                }
+                return msg;
+            }
+        });
+    </script>
+</head>
+<body>
+<div class="align-center">
+    <div class="title-div">2Yum</div>
+    <div>
+        <input type="password" class="input-text" id="pass" />
+    </div>
+    <div style="margin-bottom:25px;">
+        <input type="password" class="input-text" id="confirmPass" />
+    </div>
+    <div>
+      <!--  <input type="button" class="btn-div" id="saveBtn"/>-->
+        <div class="btn-div"  id="saveBtn">
+
+        </div>
+    </div>
+
+    <div style="margin-top:-200px;position: relative">
+        <div id="msgDiv" class="msg-div">
+        </div>
+    </div>
+
+</div>
+
+
+</body>
+</html>

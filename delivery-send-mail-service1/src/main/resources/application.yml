@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: delivery-send-mail-service
+
+server:
+  port: 8601
+  context-path: /
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8001/eureka/

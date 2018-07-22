@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twoyum.commons.mapper.LogInfoMapper" >
+   <resultMap id="BaseResultMap" type="com.twoyum.commons.domain.LogInfoOutDto" >
+	<id column="id" property="id"/>
+	<result column="ip_address"     property="ipAddress" />
+	<result column="request_method"     property="requestMethod" />
+	<result column="request_method_desc"     property="requestMethodDesc" />
+	<result column="request_business"     property="requestBusiness" />
+	<result column="channel"    property="channel"  />
+	<result column="service_id"    property="serviceId"  />
+	<result column="operator"  property="operator" />
+	<result column="operate_time" property="operateTime" />
+  </resultMap>
+ 
+  <select id="getLogInfoByUserId" resultMap="BaseResultMap">
+ select *
+   from t_log_info
+    where user_id=#{userId}
+  </select>
+  
+  <insert id="addLogInfo" parameterType="com.twoyum.commons.domain.LogInfoInDto">
+  			  insert into t_log_info(
+											ip_address,
+											request_method,
+											request_method_desc,
+											request_business,
+											channel,
+											service_id,
+											operator,
+											operate_time
+									) 
+							  	value(
+							  			#{ipAddress},          
+										#{requestMethod},   
+										#{requestMethodDesc},          
+										#{requestBusiness},            
+										#{channel},
+										#{serviceId},
+										#{operator},      
+										current_timestamp()
+										) 
+  </insert>
+</mapper>

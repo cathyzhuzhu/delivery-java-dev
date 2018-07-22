@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twoyum.merchant.mapper.YourCertificateMapper" >
+    <resultMap id="identificationPhoto" type="com.twoyum.merchant.domain.IdentificationPhotoOutDto" >
+        <result column="identification_photo_url" property="identificationPhotoUrl"  />
+        <result column="status" property="status"  />
+    </resultMap>
+
+    <resultMap id="taxpayerId" type="com.twoyum.merchant.domain.TaxpayerIdOutDto" >
+        <result column="taxpayer_id" property="taxpayerId"  />
+        <result column="taxpayer_id_type" property="taxpayerIdType"  />
+        <result column="status" property="status"  />
+    </resultMap>
+
+    <resultMap id="manager" type="com.twoyum.merchant.domain.ManagerOutDto" >
+        <result column="manager_sex" property="managerSex"  />
+        <result column="manager_name" property="managerName"  />
+        <result column="manager_phone" property="managerPhone"  />
+        <result column="manager_email" property="managerEmail"  />
+        <result column="status" property="status"  />
+    </resultMap>
+
+    <resultMap id="mailingAddress" type="com.twoyum.merchant.domain.MailingAddressOutDto" >
+        <result column="country_id" property="countryId"  />
+        <result column="street" property="street"  />
+        <result column="room_no" property="roomNo"  />
+        <result column="city" property="city"  />
+        <result column="state" property="state"  />
+        <result column="post_code" property="postCode"  />
+        <result column="finish_status" property="finishStatus"  />
+    </resultMap>
+    <resultMap id="country" type="com.twoyum.merchant.domain.CountryOutDto" >
+        <result column="id" property="id"  />
+        <result column="country_name" property="countryName"  />
+        <result column="country_pic_url" property="countryPicUrl"  />
+    </resultMap>
+
+
+  <update id="updateIdentificationPhoto" parameterType="com.twoyum.merchant.domain.IdentificationPhotoInDto">
+        update t_your_certificate
+        set identification_photo_url = #{identificationPhotoUrl},
+            update_time = current_timestamp()
+        where email=#{email}
+  </update>
+
+    <select id="getIdentificationPhoto" resultMap="identificationPhoto" parameterType="com.twoyum.merchant.domain.IdentificationPhotoInDto">
+       select identification_photo_url,
+			   finish_status
+        from t_your_certificate
+        where email = #{email}
+    </select>
+
+    <update id="updateTaxpayerId" parameterType="com.twoyum.merchant.domain.TaxpayerIdInDto">
+        update t_your_certificate
+        set taxpayer_id = #{taxpayerId},
+            taxpayer_id_type=#{taxpayerIdType},
+            update_time = current_timestamp()
+        where email=#{email}
+    </update>
+
+    <select id="getTaxpayerId" resultMap="taxpayerId" parameterType="com.twoyum.merchant.domain.TaxpayerIdInDto">
+        select taxpayer_id,
+                taxpayer_id_type,
+                finish_status
+        from t_your_certificate
+        where email=#{email}
+    </select>
+
+    <update id="updateManager" parameterType="com.twoyum.merchant.domain.ManagerInDto">
+        update t_your_certificate
+        set manager_sex = #{managerSex},
+            manager_name = #{managerName},
+            manager_phone = #{managerPhone},
+            manager_email = #{managerEmail},
+            update_time = current_timestamp()
+        where email=#{email}
+    </update>
+    <select id="getManager" resultMap="manager" parameterType="com.twoyum.merchant.domain.ManagerInDto">
+        select manager_sex,
+                manager_name,
+                manager_phone,
+                manager_email,
+                finish_status
+        from t_your_certificate
+        where email=#{email}
+    </select>
+
+    <update id="updateMailingAddress" parameterType="com.twoyum.merchant.domain.MailingAddressInDto">
+        update t_your_certificate
+        set country_id = #{countryId},
+            street = #{street},
+            room_no = #{roomNo},
+            city = #{city},
+            state = #{state},
+            post_code = #{postCode},
+            finish_status = #{finishStatus},
+            update_time = current_timestamp()
+        where email=#{email}
+    </update>
+    <select id="getMailingAddress" resultMap="mailingAddress" parameterType="com.twoyum.merchant.domain.MailingAddressInDto">
+        select country_id,
+                street,
+                room_no,
+                city,
+                state,
+                finish_status,
+                post_code
+        from t_your_certificate
+        where email=#{email}
+    </select>
+
+    <select id="getCountryList"  resultMap="country"  >
+		SELECT id,
+		        country_name,
+		        country_pic_url
+		  FROM t_country_list
+	</select>
+
+</mapper>

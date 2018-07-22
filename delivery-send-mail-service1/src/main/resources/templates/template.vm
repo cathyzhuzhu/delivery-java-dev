@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+<head>
+    <style type="text/css">
+        .align-center{
+            margin:0 auto; /* 居中 这个是必须的，，其它的属性非必须 */
+            width:300px; /* 给个宽度 顶到浏览器的两边就看不出居中效果了 */
+            text-align:center; /* 文字等内容居中 */
+        }
+    </style>
+</head>
+<body>
+<div class="align-center">
+    <div style="color:#FF3B30;font-size:60px;margin:0 auto;text-align:center;margin-top:30px;margin-bottom:20px;font-family: Verdana;"><strong>2Yum<strong></div>
+    <div style="margin:0 auto;color:#484848;font-size:20px;font-weight:normal;width:300px;word-break:keep-all;word-wrap:break-word;text-align:left;line-height:35px;margin-bottom:30px;">
+        ${text}
+    </div>
+    <div style="margin-bottom:40px;">
+        <a href="${url}" style="text-decoration: none">
+            <div style="background-color:#FF3B30;font-size:20px;font-weight:bold;width:300px;height:60px;margin:0 auto;text-align:center;line-height:60px;border-radius:5px;">
+                <font color="white">${btnText}</font>
+            </div>
+        </a>
+    </div>
+</div>
+</body>
+</html>

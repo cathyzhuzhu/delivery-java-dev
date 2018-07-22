@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twoyum.login.mapper.UserMapper" >
+    <resultMap id="users" type="com.twoyum.login.domain.UserOutDto" >
+        <result column="email" property="email"  />
+        <result column="user_name" property="userName"  />
+        <result column="url" property="url"  />
+        <result column="switch_type" property="switchType"  />
+        <result column="sign" property="sign" />
+        <result column="register_date" property="registerDate" />
+        <result column="validate_code" property="validateCode" />
+        <result column="enabled" property="enabled" />
+    </resultMap>
+    <select id="findByEmailCount" parameterType="com.twoyum.login.domain.UserInDto" resultType="int">
+        select count(1) as total
+        from t_sys_user
+        where email = #{email}
+    </select>
+
+    <insert id="addRegisterUser" parameterType="com.twoyum.login.domain.UserInDto" useGeneratedKeys="true" keyProperty="id">
+        insert into t_sys_user(email,password,url,status,create_time)
+        values(#{email},#{password},#{url},1,current_timestamp())
+    </insert>
+    <select id="findUserByEmail" parameterType="string" resultMap="users">
+        select
+                user_name,
+                url,
+                switch_type,
+                email,
+                enabled
+        from t_sys_user
+        where email = #{email}
+    </select>
+
+    <update id="updateUserInfo" parameterType="com.twoyum.login.domain.UserInDto">
+      update t_sys_user
+         set
+              enabled = 0,
+              update_time = current_timestamp()
+        where email = #{email}
+    </update>
+
+    <update id="updatePassword" parameterType="com.twoyum.login.domain.UserInDto">
+        update t_sys_user
+        set  password = #{password},
+             enabled = 1,
+             update_time = current_timestamp()
+        where email = #{email}
+    </update>
+</mapper>

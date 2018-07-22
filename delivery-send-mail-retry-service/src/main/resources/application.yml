@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: retry-service
+  cloud:
+    loadbalancer:
+      retry:
+        enabled: true  #启动重试机制
+
+server:
+  port: 7004
+  context-path: /
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8001/eureka/
+
+#启动断路器
+hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 10000
+
+custom:
+   rest:
+    connect-timeout: 1000
+    connection-request-timeout: 1000
+    read-timeout: 3000
+
+
+client-service:
+  ribbon:
+    OkToRetryOnAllOperations: true # 是否对所有请求都进行重试
+    MaxAutoRetriesNextServer: 2   #重试切换实例次数
+    MaxAutoRetries: 1     #重试次数

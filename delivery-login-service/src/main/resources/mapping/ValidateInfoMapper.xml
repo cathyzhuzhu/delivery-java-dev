@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twoyum.login.mapper.ValidateInfoMapper" >
+    <resultMap id="validateInfos" type="com.twoyum.login.domain.ValidateInfoOutDto" >
+        <result column="email" property="email"  />
+        <result column="sign" property="sign" />
+        <result column="register_date" property="registerDate" />
+        <result column="validate_code" property="validateCode" />
+    </resultMap>
+    <insert id="addValidateInfo" parameterType="com.twoyum.login.domain.ValidateInfoInDto">
+        insert into t_validate_info(email,validate_code,sign,register_date,create_time)
+        values(#{email},#{validateCode},#{sign},#{registerDate},current_timestamp())
+    </insert>
+    <select id="findValidateInfoByEmail" resultMap="validateInfos" parameterType="com.twoyum.login.domain.ValidateInfoInDto">
+      select email,
+              sign,
+              register_date,
+              validate_code
+      from t_validate_info
+      where email = #{email}
+        and sign = #{sign}
+    </select>
+</mapper>
